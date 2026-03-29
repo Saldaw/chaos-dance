@@ -1,0 +1,47 @@
+# .github/workflows/build.yml
+name: C++ Build Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    - uses: microsoft/setup-msbuild@v2
+    
+    - name: Setup vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+    
+    - name: Install SFML
+      run: .\vcpkg\vcpkg install sfml:x64-windows
+    
+    - name: Integrate vcpkg with MSBuild
+      run: .\vcpkg\vcpkg integrate install
+    
+    - name: Build Solution
+      run: msbuild Сhaos_Dance.sln /p:Configuration=Release /p:Platform=x64 /m
+    
+    - name: Copy SFML DLLs
+      run: |
+        if (Test-Path "vcpkg\installed\x64-windows\bin\*.dll") {
+          Copy-Item "vcpkg\installed\x64-windows\bin\*.dll" "x64\Release\" -Force
+        }
+        if (Test-Path "Сhaos_Dance\x64\Release\*.dll") {
+          # already there
+        }
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Chaos-Dance-Release
+        path: |
+          x64\Release\
+          Сhaos_Dance\x64\Release\
