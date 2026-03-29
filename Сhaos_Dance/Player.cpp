@@ -2,11 +2,13 @@
 
 #include "Game.h"
 #include "Grid.h"
+#include "LoadFromMemory.h"
+#include "resource.h"
 
 Player::Player(sf::Vector2<int> position, int view_range,
                std::shared_ptr<Grid> grid)
     : view_range(view_range), GameObject(position, grid) {
-  sprite_texture.loadFromFile("assets/mainCharacterAnimation.png");
+  Loader::loadTextureFromResources(IDB_PNG3, sprite_texture);
   sprite.setTexture(sprite_texture);
   animator.addAnimation("attack", 256, 256, 0, 0, 2, 0.2f);
   animator.addAnimation("jump", 256, 256, 0, 256, 2, 0.2f);

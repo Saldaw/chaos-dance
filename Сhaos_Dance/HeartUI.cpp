@@ -1,4 +1,5 @@
 #include "HeartUI.h"
+
 HeartUI::HeartUI(int maxHearts)
     : maxHearts(maxHearts), currentHealth(maxHearts) {
   createHeartTexture();
@@ -12,7 +13,7 @@ HeartUI::HeartUI(int maxHearts)
 }
 
 void HeartUI::createHeartTexture() {
-  heartTexture.loadFromFile("assets/heart.png");
+  Loader::loadTextureFromResources(IDB_PNG2, heartTexture);
 }
 
 void HeartUI::setHealth(int health) {

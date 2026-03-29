@@ -3,7 +3,7 @@
 #include <string>
 
 ComboCounter::ComboCounter() : combo(0), text(font) {
-  font.openFromFile("assets/front.ttf");
+  Loader::loadFontFromResources(IDR_TTF1, font);
 
   text.setFont(font);
   text.setCharacterSize(58);

@@ -1,11 +1,13 @@
 #include "Killer.h"
 
 #include "Grid.h"
+#include "LoadFromMemory.h"
 #include "Player.h"
+#include "resource.h"
+
 Killer::Killer(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
     : Enemy(position, grid) {
-  sprite_texture.loadFromFile("assets/KillerRebbit.png");
-  sprite.setTexture(sprite_texture);
+  Loader::loadTextureFromResources(IDB_PNG4, sprite_texture);
   animator.addAnimation("jump", 256, 256, 0, 0, 2, 0.2f);
   animator.addAnimation("attack", 256, 256, 0, 256, 2, 0.2f);
   animator.addAnimation("swing", 256, 256, 0, 512, 1, 0.2f);

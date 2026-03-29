@@ -156,12 +156,13 @@
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Desktop\Проекты\PonyDance\mainCharacterAnimation.png" />
     <Image Include="assets\BombСupcakeAnim.png" />
     <Image Include="assets\Cheast.png" />
     <Image Include="assets\Heart.png" />
+    <Image Include="assets\icon.ico" />
     <Image Include="assets\KillerRebbit.png" />
     <Image Include="assets\logo.png" />
+    <Image Include="assets\mainCharacterAnimation.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -177,18 +178,23 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="HeartUI.h" />
     <ClInclude Include="Killer.h" />
+    <ClInclude Include="LoadFromMemory.h" />
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="RhythmEngine.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="assets\beat.wav" />
+    <Font Include="assets\front.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="assets\front.ttf" />
+    <ResourceCompile Include="Сhaos_Dance.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\beat.mp3" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -74,9 +74,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Desktop\Проекты\PonyDance\mainCharacterAnimation.png">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
     <Image Include="assets\BombСupcakeAnim.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
@@ -90,6 +87,12 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="assets\logo.png">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="assets\icon.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="assets\mainCharacterAnimation.png">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
@@ -151,15 +154,26 @@
     <ClInclude Include="Killer.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="assets\beat.wav">
-      <Filter>Файлы ресурсов</Filter>
-    </Media>
+    <ClInclude Include="LoadFromMemory.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\front.ttf">
       <Filter>Файлы ресурсов</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Сhaos_Dance.rc">
+      <Filter>Файлы ресурсов</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\beat.mp3">
+      <Filter>Файлы ресурсов</Filter>
+    </Media>
   </ItemGroup>
 </Project>

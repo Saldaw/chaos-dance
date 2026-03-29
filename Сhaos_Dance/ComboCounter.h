@@ -1,6 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "LoadFromMemory.h"
+#include "resource.h"
+
 class ComboCounter {
  private:
   sf::Font font;

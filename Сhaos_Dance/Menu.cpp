@@ -41,11 +41,9 @@ Menu::Menu(sf::RenderWindow& window, Game& game_)
   sf::Vector2u windowSize = main_window.getSize();
   width = static_cast<float>(windowSize.x);
   height = static_cast<float>(windowSize.y);
-
-  if (!font.openFromFile("assets/front.ttf") ||
-      !logo_texture.loadFromFile("assets/logo.png")) {
-    main_window.close();
-  }
+  if (!Loader::loadFontFromResources(IDR_TTF1, font)) window.close();
+  if (!Loader::loadTextureFromResources(IDB_PNG1, logo_texture))
+    window.close();
 
   createGradient();
   createButtons();

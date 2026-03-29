@@ -5,14 +5,15 @@
 Game::~Game() = default;
 Game::Game()
     : main_window(sf::RenderWindow(sf::VideoMode::getDesktopMode(),
-                                   "Chaos Dance", sf::Style::None)),
+                                   "Chaos Dance", sf::Style::Default)),
       player(
           std::make_shared<Player>(sf::Vector2{1, 1}, visibilityRange, grid)),
       result_text(font) {
   main_window.setFramerateLimit(60);
   current_state = GameState::Menu;
-  font.openFromFile("assets/front.ttf");
-  result_text.setFont(font);
+  if (Loader::loadFontFromResources(IDR_TTF1, font)) {
+    result_text.setFont(font);
+  }
   result_text.setStyle(sf::Text::Bold);
   sf::FloatRect bounds = result_text.getLocalBounds();
   result_text.setOrigin({bounds.size.x / 2, bounds.size.y / 2});
@@ -20,8 +21,8 @@ Game::Game()
   result_text.setCharacterSize(360);
   result_text.setPosition({0, 400});
 
-  music.openFromFile("assets/beat.mp3");
-  music.setLooping(true);
+  music_resource = Loader::loadMusicFromResources(IDR_RCDATA1);
+  music_resource->music.setLooping(true);
 
   ui = std::make_unique<GameUI>();
   std::random_device rd;
@@ -56,7 +57,7 @@ void Game::setState(GameState state) {
   current_state = state;
   switch (state) {
     case GameState::Playing:
-      music.play();
+      music_resource->music.play();
       break;
     default:
       break;

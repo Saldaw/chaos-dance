@@ -2,10 +2,10 @@
 
 #include "GameUI.h"
 #include "Grid.h"
+#include "LoadFromMemory.h"
 #include "MapGenerator.h"
 #include "RhythmEngine.h"
-#include "SFML/Audio.hpp"
-#include "SFML/Graphics.hpp"
+#include "resource.h"
 
 class Menu;
 
@@ -24,7 +24,7 @@ class Game {
   sf::Font font;
   sf::Text result_text;
   bool is_active = true;
-  sf::Music music;
+  std::unique_ptr<MusicResource> music_resource;
   GameState current_state;
   sf::RenderWindow main_window;
   std::unique_ptr<Menu> main_menu;

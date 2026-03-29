@@ -1,7 +1,8 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include <vector>
 
+#include "LoadFromMemory.h"
+#include "resource.h"
 class HeartUI {
  private:
   sf::Texture heartTexture;

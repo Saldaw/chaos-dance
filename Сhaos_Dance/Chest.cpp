@@ -1,10 +1,12 @@
 #include "Chest.h"
 
 #include "Grid.h"
+#include "LoadFromMemory.h"
+#include "resource.h"
 
 Chest::Chest(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
     : GameObject(position, grid) {
-  sprite_texture.loadFromFile("assets/Cheast.png");
+  Loader::loadTextureFromResources(IDB_PNG5, sprite_texture);
   sprite.setTexture(sprite_texture);
   sf::IntRect rect;
   rect.position.x = 0;

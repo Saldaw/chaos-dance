@@ -1,11 +1,13 @@
 #include "BombCake.h"
 
 #include "Grid.h"
+#include "LoadFromMemory.h"
 #include "Player.h"
+#include "resource.h"
 
 BombCake::BombCake(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
     : Enemy(position, grid) {
-  sprite_texture.loadFromFile("assets/Bomb—upcakeAnim.png");
+  Loader::loadTextureFromResources(IDB_PNG6, sprite_texture);
   sprite.setTexture(sprite_texture);
   animator.addAnimation("jump", 256, 256, 0, 0, 2, 0.2f);
   animator.addAnimation("attack", 256, 256, 0, 256, 1, 0.2f);
