@@ -64,6 +64,9 @@ void Game::setState(GameState state) {
     case GameState::Playing:
       music_resource->music.play();
       break;
+    case GameState::Menu:
+      music_resource->music.pause();
+      break;
     default:
       break;
   }
@@ -71,11 +74,14 @@ void Game::setState(GameState state) {
 void Game::restartGame(bool saveState) {
   grid = nullptr;
   int current_hp = player->getHp();
-
+  level++;
   if (!saveState) {
     current_hp = PlayerConfig::START_HP;
     ui->resetCombo();
+    level = 1;
   }
+
+  ui->setLevel(level);
   player = std::make_shared<Player>(
       sf::Vector2{1, 1}, PlayerConfig::VISIBILITY_RANGE, current_hp, grid);
   genMap();
@@ -107,6 +113,13 @@ void Game::handleEvents(float deltaTime) {
 
 void Game::handleGameplayEvent(const sf::Event& event, float deltaTime) {
   if (auto keyEvent = event.getIf<sf::Event::KeyPressed>()) {
+    // Обработка Escape
+    if (keyEvent->code == sf::Keyboard::Key::Escape) {
+      setState(GameState::Menu);
+      return;
+    }
+
+    // Движение
     static const std::unordered_map<sf::Keyboard::Key, sf::Vector2i>
         keyToDirection = {{sf::Keyboard::Key::W, {0, -1}},
                           {sf::Keyboard::Key::S, {0, 1}},
@@ -196,7 +209,6 @@ void Game::startGame() {
     render(deltaTime);
   }
 }
-void Game::openMenu() {}
 void Game::gameOver() {
   hits_to_reset_message = OtherConfig::GAME_OVER_DISPLAY_BEATS;
   message_text.setFillColor(sf::Color::Red);

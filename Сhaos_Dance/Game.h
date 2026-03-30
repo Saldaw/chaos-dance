@@ -17,14 +17,13 @@ class Game {
   void setState(GameState);
   Game();
   void startGame();
-  void openMenu();
   void gameOver();
   void gameWin();
 
  private:
   sf::Font font;
   sf::Text message_text;
-  int hits_to_reset_message = 0;
+  int hits_to_reset_message = 1;
   std::unique_ptr<MusicResource> music_resource;
   GameState current_state;
   sf::RenderWindow main_window;
@@ -34,6 +33,8 @@ class Game {
   std::unique_ptr<GameUI> ui;
   std::unique_ptr<RhythmEngine> rhythm;
   std::unique_ptr<MapGenerator> map_gen;
+
+  int level = 1;
 
   void genMap();
   void handleGameplayEvent(const sf::Event& event, float deltaTime);

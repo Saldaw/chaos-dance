@@ -9,10 +9,16 @@ class GameUI {
  private:
   HeartUI hearts;
   ComboCounter combo;
+  sf::Font font;
+  sf::Text level_text;
+  int current_level;
+
+  void alignment(sf::RenderWindow& window);
 
  public:
   GameUI();
 
+  void setLevel(int level);
   void setHealth(int health);
   void addToCombo();
   void resetCombo();

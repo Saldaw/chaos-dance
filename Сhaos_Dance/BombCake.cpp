@@ -50,11 +50,11 @@ void BombCake::beat() {
 }
 void BombCake::moveToPlayer(sf::Vector2i pl_pos) {
   sf::Vector2i pos_new = grid_position;
-  if (pl_pos.x > grid_position.x) pos_new.x += 1;
-  if (pl_pos.x < grid_position.x) pos_new.x -= 1;
-  if (pl_pos.y > grid_position.y) pos_new.y += 1;
-  if (pl_pos.y < grid_position.y) pos_new.y -= 1;
-  grid->moveObject(shared_from_this(), pos_new.x, pos_new.y);
+  auto pos_new_raw = grid->findBestMove(grid_position, pl_pos, directions);
+  if (pos_new_raw) {
+    pos_new += pos_new_raw.value();
+    grid->moveObject(shared_from_this(), pos_new.x, pos_new.y);
+  }
   steps_to_explosion -= 1;
 }
 void BombCake::RandomMove() {

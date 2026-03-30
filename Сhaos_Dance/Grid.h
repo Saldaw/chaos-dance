@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <queue>
 #include <random>
 
 #include "BombCake.h"
@@ -48,6 +49,11 @@ class Grid : public std::enable_shared_from_this<Grid> {
   void beat();
   void update(float deltaTime);
 
+  std::optional<sf::Vector2<int>> findBestMove(
+      const sf::Vector2<int>& start, const sf::Vector2<int>& target,
+      const std::vector<sf::Vector2<int>>& directions);
+
+  bool isWalkable(int x, int y);
   std::vector<std::shared_ptr<GameObject>> getObjectsAt(int x, int y);
   int getGridWidth() const { return grid_width; }
   int getGridHeight() const { return grid_height; }

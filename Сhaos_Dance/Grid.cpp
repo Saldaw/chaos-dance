@@ -1,4 +1,4 @@
-#include "Grid.h"
+﻿#include "Grid.h"
 
 Grid::Grid(unsigned int width, unsigned int height,
            std::shared_ptr<Player> player)
@@ -102,7 +102,7 @@ Cell* Grid::getCell(unsigned int x, unsigned int y) {
   return &cells[y][x];
 }
 void Grid::moveObject(std::shared_ptr<GameObject> obj, int newX, int newY) {
-  // ������� �� ������ ������, ��������� � �����
+  // Удаляем из старой клетки, добавляем в новую
   Cell* oldCell = getCell(obj->getGridPosition().x, obj->getGridPosition().y);
   oldCell->removeObject(obj);
 
@@ -111,7 +111,7 @@ void Grid::moveObject(std::shared_ptr<GameObject> obj, int newX, int newY) {
   newCell->addObject(obj);
 }
 
-void Grid::spawn�hest(int count) {
+void Grid::spawnСhest(int count) {
   for (int i = 0; i < count; i++) {
     auto cords = findRandomFloorTile();
     if (cords) {
@@ -174,7 +174,7 @@ void Grid::recalcCellSize() {
 void Grid::updateFogOfWar() {
   if (!player) return;
 
-  // ������� ���������� visible ��� ���� ������
+  // Cбрасываем visible для всех клеток
   for (unsigned int y = 0; y < grid_height; ++y) {
     for (unsigned int x = 0; x < grid_width; ++x) {
       cells[y][x].setVisible(false);
@@ -185,18 +185,147 @@ void Grid::updateFogOfWar() {
   int py = player->getGridPosition().y;
   int range = player->getViewRange();
 
+  // Функция для проверки видимости по линии (DDA)
+  auto isLineOfSightClear = [&](int x0, int y0, int x1, int y1) -> bool {
+    int dx = std::abs(x1 - x0);
+    int dy = std::abs(y1 - y0);
+    int sx = (x0 < x1) ? 1 : -1;
+    int sy = (y0 < y1) ? 1 : -1;
+    int err = dx - dy;
+
+    int x = x0;
+    int y = y0;
+
+    while (x != x1 || y != y1) {
+      if (x != x0 || y != y0) {
+        if (getTile(x, y) != Tile::TileType::kFloor) {
+          return false;
+        }
+      }
+      int e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        x += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        y += sy;
+      }
+    }
+    return true;
+  };
+
   for (int dy = -range; dy <= range; ++dy) {
     for (int dx = -range; dx <= range; ++dx) {
       int nx = px + dx;
       int ny = py + dy;
       if (nx < 0 || nx >= static_cast<int>(grid_width) || ny < 0 ||
-          ny >= static_cast<int>(grid_height))
+          ny >= static_cast<int>(grid_height)) {
         continue;
-
-      if (dx * dx + dy * dy <= range * range) {
+      }
+      if (dx * dx + dy * dy > range * range) {
+        continue;
+      }
+      if (isLineOfSightClear(px, py, nx, ny)) {
         cells[ny][nx].setVisible(true);
         cells[ny][nx].openCell();
       }
     }
   }
+}
+
+std::optional<sf::Vector2<int>> Grid::findBestMove(
+    const sf::Vector2<int>& start, const sf::Vector2<int>& target,
+    const std::vector<sf::Vector2<int>>& directions) {
+  // Если стартовая позиция не проходима
+  if (!isWalkable(start.x, start.y)) {
+    return std::nullopt;
+  }
+
+  // Если целевая позиция не проходима, ищем ближайшую проходимую
+  sf::Vector2<int> actualTarget = target;
+  if (!isWalkable(target.x, target.y)) {
+    int bestDist = INT_MAX;
+    bool found = false;
+
+    for (int dy = -5; dy <= 5; ++dy) {
+      for (int dx = -5; dx <= 5; ++dx) {
+        int nx = target.x + dx;
+        int ny = target.y + dy;
+
+        if (nx >= 0 && nx < static_cast<int>(grid_width) && ny >= 0 &&
+            ny < static_cast<int>(grid_height) && isWalkable(nx, ny)) {
+          int dist = std::abs(dx) + std::abs(dy);
+          if (dist < bestDist) {
+            bestDist = dist;
+            actualTarget = {nx, ny};
+            found = true;
+          }
+        }
+      }
+    }
+
+    if (!found) {
+      return std::nullopt;
+    }
+  }
+
+  // BFS для поиска пути
+  struct Node {
+    int x, y;
+    int dist;
+    sf::Vector2<int> firstStep;
+  };
+
+  std::vector<std::vector<bool>> visited(grid_height,
+                                         std::vector<bool>(grid_width, false));
+  std::queue<Node> queue;
+
+  queue.push({start.x, start.y, 0, {0, 0}});
+  visited[start.y][start.x] = true;
+
+  while (!queue.empty()) {
+    Node current = queue.front();
+    queue.pop();
+
+    // Проверяем, достигли ли цели
+    if (current.x == actualTarget.x && current.y == actualTarget.y) {
+      return current.firstStep;
+    }
+
+    // Исследуем соседей
+    for (const auto& dir : directions) {
+      int nx = current.x + dir.x;
+      int ny = current.y + dir.y;
+
+      // Проверка границ
+      if (nx < 0 || nx >= static_cast<int>(grid_width) || ny < 0 ||
+          ny >= static_cast<int>(grid_height)) {
+        continue;
+      }
+
+      // Проверка, что клетка не посещена и проходима
+      if (!visited[ny][nx] && isWalkable(nx, ny)) {
+        visited[ny][nx] = true;
+
+        sf::Vector2<int> firstStep = current.firstStep;
+        if (current.dist == 0) {
+          firstStep = dir;
+        }
+
+        queue.push({nx, ny, current.dist + 1, firstStep});
+      }
+    }
+  }
+
+  return std::nullopt;
+}
+
+bool Grid::isWalkable(int x, int y) {
+  if (x < 0 || x >= static_cast<int>(grid_width) || y < 0 ||
+      y >= static_cast<int>(grid_height)) {
+    return false;
+  }
+
+  return getCell(x, y)->getTileType() == Tile::TileType::kFloor;
 }

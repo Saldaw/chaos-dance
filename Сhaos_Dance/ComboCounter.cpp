@@ -9,7 +9,7 @@ ComboCounter::ComboCounter() : combo(0), text(font) {
   text.setCharacterSize(58);
   text.setFillColor(sf::Color::Yellow);
   text.setOutlineThickness(2);
-  text.setPosition({100.0f, 60.0f});
+  text.setPosition({10.0f, 60.0f});
 }
 
 void ComboCounter::addToCombo(int amount) {

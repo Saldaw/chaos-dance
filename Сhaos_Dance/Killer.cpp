@@ -47,15 +47,11 @@ void Killer::beat() {
 }
 void Killer::moveToPlayer(sf::Vector2i pl_pos) {
   sf::Vector2i pos_new = grid_position;
-  if (pl_pos.x > grid_position.x)
-    pos_new.x += 1;
-  else if (pl_pos.x < grid_position.x)
-    pos_new.x -= 1;
-  else if (pl_pos.y > grid_position.y)
-    pos_new.y += 1;
-  else if (pl_pos.y < grid_position.y)
-    pos_new.y -= 1;
-  grid->moveObject(shared_from_this(), pos_new.x, pos_new.y);
+  auto pos_new_raw = grid->findBestMove(grid_position, pl_pos, directions);
+  if (pos_new_raw) {
+    pos_new += pos_new_raw.value();
+    grid->moveObject(shared_from_this(), pos_new.x, pos_new.y);
+  }
 }
 void Killer::RandomMove() {
   std::vector<sf::Vector2<int>> directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};

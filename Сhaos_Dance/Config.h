@@ -10,8 +10,8 @@ namespace EnemyConfig {
 inline constexpr int VISIBILITY_RANGE_ENEMY = 4;
 // BombCake
 inline constexpr int BOMB_DAMAGE = 1;
-inline constexpr int BOMB_HP = 1;
-inline constexpr int STEPS_TO_EXPLOSION = 4;
+inline constexpr int BOMB_HP = 2;
+inline constexpr int STEPS_TO_EXPLOSION = 8;
 inline constexpr int DIST_EXPLOSION = 1;
 // Killer
 inline constexpr int KILLER_DAMAGE = 1;
@@ -19,9 +19,9 @@ inline constexpr int KILLER_HP = 4;
 }  // namespace EnemyConfig
 
 namespace PlayerConfig {
-inline constexpr int MAX_HP = 4;
+inline constexpr int MAX_HP = 10;
 inline constexpr int START_HP = 2;
-inline constexpr int VISIBILITY_RANGE = 3;
+inline constexpr int VISIBILITY_RANGE = 4;
 inline constexpr int PLAYER_DAMAGE = 1;
 }  // namespace PlayerConfig
 
