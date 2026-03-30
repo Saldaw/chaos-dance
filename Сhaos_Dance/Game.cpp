@@ -34,8 +34,9 @@ Game::Game()
   map_gen = std::make_unique<MapGenerator>(dist_x(gen), dist_y(gen));
   map_gen->generate();
   auto map = map_gen->getMap();
-
-  grid = std::make_shared<Grid>(map[0].size(), map.size(), player);
+  unsigned int map_width = static_cast<unsigned int>(map[0].size());
+  unsigned int map_hight = static_cast<unsigned int>(map.size());
+  grid = std::make_shared<Grid>(map_width, map_hight, player);
   grid->updateSize(main_window.getSize());
   for (int y = 0; y < map.size(); ++y) {
     for (int x = 0; x < map[y].size(); ++x) {

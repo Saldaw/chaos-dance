@@ -55,8 +55,8 @@ void Grid::draw(sf::RenderWindow& window) {
       } else {
         sf::Color tileColor = Tile::getTileColor(cell.getTileType(), x, y);
         if (!cell.isVisible()) {
-          tileColor = sf::Color(tileColor.r * 0.5f, tileColor.g * 0.5f,
-                                tileColor.b * 0.5f);
+          tileColor =
+              sf::Color(tileColor.r / 2, tileColor.g / 2, tileColor.b / 2);
         }
         cell_shape.setFillColor(tileColor);
       }
@@ -80,8 +80,8 @@ std::optional<std::pair<int, int>> Grid::findRandomFloorTile() {
 
   std::vector<std::pair<int, int>> floorTiles;
 
-  for (int y = 0; y < grid_height; y++) {
-    for (int x = 0; x < grid_width; x++) {
+  for (unsigned int y = 0; y < grid_height; y++) {
+    for (unsigned int x = 0; x < grid_width; x++) {
       if (cells[y][x].getTileType() == Tile::TileType::kFloor &&
           cells[y][x].getObjects().empty()) {
         floorTiles.push_back({x, y});

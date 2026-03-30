@@ -19,7 +19,10 @@ sf::Color Tile::getTileColor(TileType type, int x, int y) {
 
       float value =
           0.6f + (hash & 0x7FFFFFFF) / static_cast<float>(0x7FFFFFFF) * 0.4f;
-      return sf::Color(110 * value, 129 * value, 67 * value);
+      return sf::Color(static_cast<uint8_t>(110 * value),
+                       static_cast<uint8_t>(129 * value),
+                       static_cast<uint8_t>(67 * value));
       break;
   }
+  return sf::Color::Black;
 }
