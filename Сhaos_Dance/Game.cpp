@@ -53,7 +53,7 @@ void Game::genMap() {
     }
   }
   grid->moveObject(player, 1, 1);
-  grid->spawnÑhest(MapConfig::NUM_OF_CHESTS);
+  grid->spawnChest(MapConfig::NUM_OF_CHESTS);
   grid->spawnBombs(MapConfig::NUM_OF_BOMBS);
   grid->spawnKillers(MapConfig::NUM_OF_KILLERS);
 }

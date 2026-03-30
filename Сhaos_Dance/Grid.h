@@ -43,7 +43,7 @@ class Grid : public std::enable_shared_from_this<Grid> {
   void addObject(std::shared_ptr<GameObject> obj, int x, int y);
   void removeObject(std::shared_ptr<GameObject> obj);
   void moveObject(std::shared_ptr<GameObject> obj, int newX, int newY);
-  void spawn—hest(int count);
+  void spawnChest(int count);
   void spawnBombs(int count);
   void spawnKillers(int count);
   void beat();
