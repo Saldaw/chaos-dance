@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "ComboCounter.h"
+#include "Config.h"
 #include "HeartUI.h"
 
 class GameUI {

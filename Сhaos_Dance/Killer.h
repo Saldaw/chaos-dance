@@ -1,11 +1,11 @@
 #pragma once
 #include <random>
 
+#include "Config.h"
 #include "Enemy.h"
 class Killer : public Enemy {
  private:
   std::mt19937 rng;
-  int steps_to_explosion = stepsToExplosion;
   void moveToPlayer(sf::Vector2i pl_pos);
   void RandomMove();
 

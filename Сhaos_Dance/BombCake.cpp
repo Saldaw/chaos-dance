@@ -6,7 +6,7 @@
 #include "resource.h"
 
 BombCake::BombCake(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
-    : Enemy(position, grid) {
+    : Enemy(position, grid, EnemyConfig::BOMB_HP) {
   Loader::loadTextureFromResources(IDB_PNG6, sprite_texture);
   sprite.setTexture(sprite_texture);
   animator.addAnimation("jump", 256, 256, 0, 0, 2, 0.2f);
@@ -24,12 +24,13 @@ void BombCake::beat() {
   sf::Vector2i pl_pos = player->getGridPosition();
   int dist = (pl_pos.x - grid_position.x) * (pl_pos.x - grid_position.x) +
              (pl_pos.y - grid_position.y) * (pl_pos.y - grid_position.y);
-  if (dist <= distExplosion * distExplosion) {
+  if (dist <= EnemyConfig::DIST_EXPLOSION * EnemyConfig::DIST_EXPLOSION) {
     state = EnemyState::Attack;
     animator.play("attack", false);
-    player->getDamage(EnemyDamage);
+    player->getDamage(EnemyConfig::BOMB_DAMAGE);
     return;
-  } else if (dist <= visibilityRangeEnemy * visibilityRangeEnemy) {
+  } else if (dist <= EnemyConfig::VISIBILITY_RANGE_ENEMY *
+                         EnemyConfig::VISIBILITY_RANGE_ENEMY) {
     moveToPlayer(pl_pos);
   } else {
     RandomMove();
@@ -38,7 +39,7 @@ void BombCake::beat() {
     animator.play("attack", false);
     state = EnemyState::Attack;
     if (pl_pos == grid_position) {
-      player->getDamage(EnemyDamage);
+      player->getDamage(EnemyConfig::BOMB_DAMAGE);
     }
   } else {
     animator.play("jump", false);

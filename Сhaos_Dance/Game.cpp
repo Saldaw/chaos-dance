@@ -6,8 +6,8 @@ Game::~Game() = default;
 Game::Game()
     : main_window(sf::RenderWindow(sf::VideoMode::getDesktopMode(),
                                    "Chaos Dance", sf::Style::Default)),
-      player(
-          std::make_shared<Player>(sf::Vector2{1, 1}, visibilityRange, grid)),
+      player(std::make_shared<Player>(sf::Vector2{1, 1},
+                                      PlayerConfig::VISIBILITY_RANGE, grid)),
       result_text(font) {
   main_window.setFramerateLimit(60);
   current_state = GameState::Menu;
@@ -27,9 +27,10 @@ Game::Game()
   ui = std::make_unique<GameUI>();
   std::random_device rd;
   std::mt19937 gen(rd());
-
-  std::uniform_int_distribution<int> dist_x(minWidth, maxWidth);
-  std::uniform_int_distribution<int> dist_y(minHeight, maxHeight);
+  std::uniform_int_distribution<int> dist_x(MapConfig::MIN_WIDTH,
+                                            MapConfig::MAX_WIDTH);
+  std::uniform_int_distribution<int> dist_y(MapConfig::MIN_HEIGHT,
+                                            MapConfig::MAX_HEIGHT);
   map_gen = std::make_unique<MapGenerator>(dist_x(gen), dist_y(gen));
   map_gen->generate();
   auto map = map_gen->getMap();
@@ -43,13 +44,13 @@ Game::Game()
   }
 
   grid->moveObject(player, 1, 1);
+  grid->spawnÑhest(MapConfig::NUM_OF_CHESTS);
+  grid->spawnBombs(MapConfig::NUM_OF_BOMBS);
+  grid->spawnKillers(MapConfig::NUM_OF_KILLERS);
 
-  grid->spawnÑhest(numOfChests);
-  grid->spawnBombs(numOfBombs);
-  grid->spawnKillers(numOfKillers);
-
-  rhythm = std::make_unique<RhythmEngine>(beatsPerMinute, hitWindowSec,
-                                          cooldownPercent);
+  rhythm = std::make_unique<RhythmEngine>(RhythmConfig::BEATS_PER_MINUTE,
+                                          RhythmConfig::HIT_WINDOW_SEC,
+                                          RhythmConfig::COOLDOWN_PERCENT);
   main_menu = std::make_unique<Menu>(main_window, *this);
 }
 
@@ -119,7 +120,7 @@ void Game::attemptPlayerMove(const sf::Vector2i& direction) {
     player->playAnimation("attack");
     Cell* cell = grid->getCell(newPos.x, newPos.y);
     for (std::shared_ptr<GameObject> obj : cell->getObjects()) {
-      obj->getDamage(playerDamage * (ui->getCombo() + 1));
+      obj->getDamage(PlayerConfig::PLAYER_DAMAGE * (ui->getCombo() + 1));
       ui->addToCombo();
     }
   }

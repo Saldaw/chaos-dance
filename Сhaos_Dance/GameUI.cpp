@@ -1,8 +1,6 @@
 #include "GameUI.h"
 
-#include "Options.h"
-
-GameUI::GameUI() : hearts(maxHP) {}
+GameUI::GameUI() : hearts(PlayerConfig::START_HP) {}
 
 void GameUI::setHealth(int health) { hearts.setHealth(health); }
 

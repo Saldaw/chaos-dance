@@ -79,13 +79,13 @@ void MapGenerator::placeWall(int x, int y, bool horizontal, int length) {
 void MapGenerator::addInnerWalls() {
   std::uniform_int_distribution<int> xDist(2, width - 3);
   std::uniform_int_distribution<int> yDist(2, height - 3);
-  std::uniform_int_distribution<int> lengthDist(MIN_WALL_LENGTH,
-                                                MAX_WALL_LENGTH);
+  std::uniform_int_distribution<int> lengthDist(MapConfig::MIN_WALL_LENGTH,
+                                                MapConfig::MAX_WALL_LENGTH);
   std::uniform_int_distribution<int> boolDist(0, 1);
   std::uniform_real_distribution<float> densityDist(0.0f, 1.0f);
 
   int totalCells = (width - 4) * (height - 4);
-  int maxWalls = static_cast<int>(totalCells * WALL_DENSITY);
+  int maxWalls = static_cast<int>(totalCells * MapConfig::WALL_DENSITY);
   int wallsPlaced = 0;
   int attempts = 0;
   const int MAX_ATTEMPTS = 500;

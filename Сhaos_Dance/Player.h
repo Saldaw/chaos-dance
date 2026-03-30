@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Animator.h"
+#include "Config.h"
 #include "GameObject.h"
 
 class Player : public GameObject {
  private:
   int view_range = 3;
-  int hp = startHP;
+  int hp = PlayerConfig::START_HP;
 
   Animator animator = Animator(sprite);
 

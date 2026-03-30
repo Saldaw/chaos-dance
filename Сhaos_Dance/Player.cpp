@@ -23,4 +23,6 @@ void Player::getDamage(int damage) {
     hp -= damage;
   }
 }
-void Player::addHp(int newHP) { hp = std::min(hp + newHP, maxHP); }
+void Player::addHp(int newHP) {
+  hp = std::min(hp + newHP, PlayerConfig::MAX_HP);
+}

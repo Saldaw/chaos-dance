@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Config.h"
 #include "GameUI.h"
 #include "Grid.h"
 #include "LoadFromMemory.h"

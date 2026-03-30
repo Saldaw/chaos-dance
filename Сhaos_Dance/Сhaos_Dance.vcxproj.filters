@@ -127,7 +127,7 @@
     <ClInclude Include="RhythmEngine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Options.h">
+    <ClInclude Include="Config.h">
       <Filter>Файлы ресурсов</Filter>
     </ClInclude>
     <ClInclude Include="HeartUI.h">

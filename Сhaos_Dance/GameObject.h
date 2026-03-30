@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Options.h"
 class Grid;
 
 class GameObject : public std::enable_shared_from_this<GameObject> {
