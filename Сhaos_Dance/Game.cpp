@@ -5,26 +5,35 @@
 Game::~Game() = default;
 Game::Game()
     : main_window(sf::RenderWindow(sf::VideoMode::getDesktopMode(),
-                                   "Chaos Dance", sf::Style::Default)),
+                                   "Chaos Dance", sf::Style::None)),
       player(std::make_shared<Player>(sf::Vector2{1, 1},
-                                      PlayerConfig::VISIBILITY_RANGE, grid)),
-      result_text(font) {
+                                      PlayerConfig::VISIBILITY_RANGE,
+                                      PlayerConfig::START_HP, grid)),
+      message_text(font) {
   main_window.setFramerateLimit(60);
-  current_state = GameState::Menu;
   if (Loader::loadFontFromResources(IDR_TTF1, font)) {
-    result_text.setFont(font);
+    message_text.setFont(font);
   }
-  result_text.setStyle(sf::Text::Bold);
-  sf::FloatRect bounds = result_text.getLocalBounds();
-  result_text.setOrigin({bounds.size.x / 2, bounds.size.y / 2});
 
-  result_text.setCharacterSize(360);
-  result_text.setPosition({0, 400});
+  message_text.setStyle(sf::Text::Bold);
+  message_text.setCharacterSize(180);
+  message_text.setFillColor(sf::Color::Green);
+  centerText(message_text);
 
   music_resource = Loader::loadMusicFromResources(IDR_RCDATA1);
   music_resource->music.setLooping(true);
 
   ui = std::make_unique<GameUI>();
+  genMap();
+  rhythm = std::make_unique<RhythmEngine>(RhythmConfig::BEATS_PER_MINUTE,
+                                          RhythmConfig::HIT_WINDOW_SEC,
+                                          RhythmConfig::COOLDOWN_PERCENT);
+
+  current_state = GameState::Menu;
+  main_menu = std::make_unique<Menu>(main_window, *this);
+}
+
+void Game::genMap() {
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_int_distribution<int> dist_x(MapConfig::MIN_WIDTH,
@@ -43,16 +52,10 @@ Game::Game()
       grid->setTile(x, y, map[y][x]);
     }
   }
-
   grid->moveObject(player, 1, 1);
   grid->spawnÑhest(MapConfig::NUM_OF_CHESTS);
   grid->spawnBombs(MapConfig::NUM_OF_BOMBS);
   grid->spawnKillers(MapConfig::NUM_OF_KILLERS);
-
-  rhythm = std::make_unique<RhythmEngine>(RhythmConfig::BEATS_PER_MINUTE,
-                                          RhythmConfig::HIT_WINDOW_SEC,
-                                          RhythmConfig::COOLDOWN_PERCENT);
-  main_menu = std::make_unique<Menu>(main_window, *this);
 }
 
 void Game::setState(GameState state) {
@@ -65,12 +68,27 @@ void Game::setState(GameState state) {
       break;
   }
 }
+void Game::restartGame(bool saveState) {
+  grid = nullptr;
+  int current_hp = player->getHp();
+
+  if (!saveState) {
+    current_hp = PlayerConfig::START_HP;
+    ui->resetCombo();
+  }
+  player = std::make_shared<Player>(
+      sf::Vector2{1, 1}, PlayerConfig::VISIBILITY_RANGE, current_hp, grid);
+  genMap();
+}
+void Game::centerText(sf::Text& text) {
+  sf::FloatRect bounds = text.getLocalBounds();
+  text.setOrigin({bounds.size.x / 2, 0});
+  text.setPosition({static_cast<float>(main_window.getSize().x) / 2.0f,
+                    static_cast<float>(main_window.getSize().y) * 0.05f});
+}
 
 bool Game::canMoveHere(sf::Vector2i pos) {
   Tile::TileType type = grid->getTile(pos.x, pos.y);
-  if (type == Tile::TileType::kExit) {
-    gameWin();
-  }
   return grid->getTile(pos.x, pos.y) == Tile::TileType::kFloor &&
          grid->getObjectsAt(pos.x, pos.y).size() == 0;
 }
@@ -114,6 +132,11 @@ void Game::attemptPlayerMove(const sf::Vector2i& direction) {
   if (direction.x != 0) {
     player->flip(direction.x < 0);
   }
+  if (grid->getCell(newPos.x, newPos.y)->getTileType() ==
+      Tile::TileType::kExit) {
+    gameWin();
+    return;
+  }
   if (canMoveHere(newPos)) {
     player->playAnimation("jump");
     grid->moveObject(player, newPos.x, newPos.y);
@@ -130,7 +153,7 @@ void Game::attemptPlayerMove(const sf::Vector2i& direction) {
 void Game::update(float deltaTime) {
   if (current_state == GameState::Menu) {
     main_menu->update(deltaTime);
-  } else if (is_active) {
+  } else if (current_state == GameState::Playing) {
     player->update(deltaTime);
     grid->update(deltaTime);
     int pl_hp = player->getHp();
@@ -139,6 +162,7 @@ void Game::update(float deltaTime) {
     RhythmEngine::Movement beat_state = rhythm->update(deltaTime);
     if (beat_state != RhythmEngine::Movement::Null) {
       grid->beat();
+      if (hits_to_reset_message > 0) hits_to_reset_message--;
       if (beat_state == RhythmEngine::Movement::PlayerNotClick) {
         player->playAnimation("idle");
         ui->resetCombo();
@@ -156,8 +180,8 @@ void Game::render(float deltaTime) {
   } else {
     grid->draw(main_window);
     ui->draw(main_window);
-    if (!is_active) {
-      main_window.draw(result_text);
+    if (hits_to_reset_message > 0) {
+      main_window.draw(message_text);
     }
   }
   main_window.display();
@@ -174,12 +198,16 @@ void Game::startGame() {
 }
 void Game::openMenu() {}
 void Game::gameOver() {
-  is_active = false;
-  result_text.setFillColor(sf::Color::Red);
-  result_text.setString("GAME OVER");
+  hits_to_reset_message = OtherConfig::GAME_OVER_DISPLAY_BEATS;
+  message_text.setFillColor(sf::Color::Red);
+  message_text.setString("GAME OVER");
+  centerText(message_text);
+  restartGame(false);
 }
 void Game::gameWin() {
-  is_active = false;
-  result_text.setFillColor(sf::Color::Green);
-  result_text.setString("VICTORY!");
+  hits_to_reset_message = OtherConfig::LEVEL_COMPLETE_DISPLAY_BEATS;
+  message_text.setString("LEVEL completed");
+  message_text.setFillColor(sf::Color::Green);
+  centerText(message_text);
+  restartGame(true);
 }

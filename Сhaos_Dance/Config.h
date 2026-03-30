@@ -39,3 +39,8 @@ inline constexpr int NUM_OF_CHESTS = 2;
 inline constexpr int NUM_OF_BOMBS = 1;
 inline constexpr int NUM_OF_KILLERS = 1;
 }  // namespace MapConfig
+
+namespace OtherConfig {
+inline constexpr int LEVEL_COMPLETE_DISPLAY_BEATS = 3;
+inline constexpr int GAME_OVER_DISPLAY_BEATS = 3;
+}

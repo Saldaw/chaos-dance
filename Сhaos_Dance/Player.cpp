@@ -5,9 +5,9 @@
 #include "LoadFromMemory.h"
 #include "resource.h"
 
-Player::Player(sf::Vector2<int> position, int view_range,
+Player::Player(sf::Vector2<int> position, int view_range, int hp,
                std::shared_ptr<Grid> grid)
-    : view_range(view_range), GameObject(position, grid) {
+    : view_range(view_range), hp(hp), GameObject(position, grid) {
   Loader::loadTextureFromResources(IDB_PNG3, sprite_texture);
   sprite.setTexture(sprite_texture);
   animator.addAnimation("attack", 256, 256, 0, 0, 2, 0.2f);

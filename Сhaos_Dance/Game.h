@@ -23,8 +23,8 @@ class Game {
 
  private:
   sf::Font font;
-  sf::Text result_text;
-  bool is_active = true;
+  sf::Text message_text;
+  int hits_to_reset_message = 0;
   std::unique_ptr<MusicResource> music_resource;
   GameState current_state;
   sf::RenderWindow main_window;
@@ -35,8 +35,11 @@ class Game {
   std::unique_ptr<RhythmEngine> rhythm;
   std::unique_ptr<MapGenerator> map_gen;
 
+  void genMap();
   void handleGameplayEvent(const sf::Event& event, float deltaTime);
   void attemptPlayerMove(const sf::Vector2i& direction);
+  void restartGame(bool saveState);
+  void centerText(sf::Text& text);
 
   bool canMoveHere(sf::Vector2i pos);
   void handleEvents(float);
