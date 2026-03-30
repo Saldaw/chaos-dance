@@ -14,7 +14,10 @@ Player::Player(sf::Vector2<int> position, int view_range, int hp,
   animator.addAnimation("jump", 256, 256, 0, 256, 2, 0.2f);
   animator.addAnimation("idle", 256, 256, 0, 512, 2, 0.2f);
 }
-void Player::update(float deltaTime) { animator.update(deltaTime); }
+void Player::update(float deltaTime) {
+  animator.update(deltaTime);
+  GameObject::update(deltaTime);
+}
 void Player::playAnimation(std::string name) { animator.play(name, false); }
 void Player::getDamage(int damage) {
   if (damage >= hp) {
@@ -22,6 +25,7 @@ void Player::getDamage(int damage) {
   } else {
     hp -= damage;
   }
+  GameObject::getDamage(damage);
 }
 void Player::addHp(int newHP) {
   hp = std::min(hp + newHP, PlayerConfig::MAX_HP);

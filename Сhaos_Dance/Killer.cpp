@@ -13,7 +13,10 @@ Killer::Killer(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
   animator.addAnimation("swing", 256, 256, 0, 512, 1, 0.2f);
 }
 
-void Killer::update(float deltaTime) { animator.update(deltaTime); }
+void Killer::update(float deltaTime) {
+  animator.update(deltaTime);
+  GameObject::update(deltaTime);
+}
 void Killer::beat() {
   std::shared_ptr<Player> player = grid->getPlayer();
   sf::Vector2i pl_pos = player->getGridPosition();

@@ -43,4 +43,6 @@ inline constexpr int NUM_OF_KILLERS = 1;
 namespace OtherConfig {
 inline constexpr int LEVEL_COMPLETE_DISPLAY_BEATS = 3;
 inline constexpr int GAME_OVER_DISPLAY_BEATS = 3;
-}
+inline constexpr float HIT_EFFECT_DURATION = 0.3f;
+inline constexpr float HIT_EFFECT_DEGREE = 2.f;
+}  // namespace OtherConfig

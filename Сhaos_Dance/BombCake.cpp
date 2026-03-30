@@ -13,7 +13,10 @@ BombCake::BombCake(sf::Vector2<int> position, std::shared_ptr<Grid> grid)
   animator.addAnimation("attack", 256, 256, 0, 256, 1, 0.2f);
 }
 
-void BombCake::update(float deltaTime) { animator.update(deltaTime); }
+void BombCake::update(float deltaTime) {
+  animator.update(deltaTime);
+  GameObject::update(deltaTime);
+}
 void BombCake::beat() {
   if (state == EnemyState::Attack) {
     grid->removeObject(shared_from_this());
